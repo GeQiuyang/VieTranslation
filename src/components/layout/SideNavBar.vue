@@ -52,10 +52,6 @@ const navItems = [
         <span class="material-symbols-outlined">settings</span>
         <span class="text-sm font-semibold">Settings</span>
       </router-link>
-      <a href="#" class="flex items-center gap-3 px-4 py-3 mb-1 mx-2 rounded-lg text-on-surface-variant hover:bg-surface-variant cursor-pointer transition-all">
-        <span class="material-symbols-outlined">help</span>
-        <span class="text-sm font-semibold">Support</span>
-      </a>
     </div>
   </aside>
 
