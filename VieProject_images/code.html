@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RigExpert Pro | Technical Translation Tool</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#dadada",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#c8c6c6",
+                        "background": "#f9f9f9",
+                        "on-secondary-container": "#6e5c00",
+                        "tertiary-container": "#003461",
+                        "on-error": "#ffffff",
+                        "primary-fixed": "#e4e2e1",
+                        "on-background": "#1a1c1c",
+                        "surface-container-high": "#e8e8e8",
+                        "surface-container-low": "#f3f3f3",
+                        "outline": "#747878",
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#c8c6c6",
+                        "secondary-fixed-dim": "#e9c400",
+                        "on-surface": "#1a1c1c",
+                        "secondary-container": "#fcd400",
+                        "on-secondary-fixed": "#221b00",
+                        "error": "#ba1a1a",
+                        "surface-bright": "#f9f9f9",
+                        "tertiary-fixed-dim": "#a4c9ff",
+                        "primary-container": "#333333",
+                        "surface-variant": "#e2e2e2",
+                        "tertiary": "#001f3d",
+                        "surface": "#f9f9f9",
+                        "error-container": "#ffdad6",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-primary-fixed-variant": "#474747",
+                        "outline-variant": "#c4c7c7",
+                        "on-surface-variant": "#444748",
+                        "secondary-fixed": "#ffe16d",
+                        "inverse-surface": "#2f3131",
+                        "secondary": "#705d00",
+                        "on-primary-container": "#9c9b9b",
+                        "on-primary-fixed": "#1b1c1c",
+                        "on-tertiary-fixed-variant": "#004883",
+                        "surface-tint": "#5f5e5e",
+                        "primary": "#1e1e1e",
+                        "tertiary-fixed": "#d4e3ff",
+                        "surface-container": "#eeeeee",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed": "#001c39",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-tertiary-container": "#5a9ef1",
+                        "on-secondary-fixed-variant": "#544600"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container-max": "1440px",
+                        "gutter": "24px",
+                        "unit": "4px",
+                        "margin": "32px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "data-mono": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "data-mono": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .translation-glow {
+            box-shadow: 0 0 20px rgba(112, 93, 0, 0.05);
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #c4c7c7; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #747878; }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen">
+<!-- TopNavBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-gutter h-16 bg-surface border-b border-outline-variant">
+<div class="flex items-center gap-8">
+<span class="font-headline-md text-headline-md font-bold text-primary">RIG-EXPERT</span>
+<nav class="hidden md:flex items-center gap-6">
+<div class="flex items-center gap-2 text-secondary font-bold border-b-2 border-secondary px-1 h-16 cursor-pointer">
+<span class="font-body-md text-body-md">CNY/VND: 3,450</span>
+</div>
+<div class="text-on-surface-variant hover:bg-surface-container-low transition-colors px-3 py-1 rounded cursor-pointer">
+<span class="font-body-md text-body-md">Live Market News</span>
+</div>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-low p-2 rounded-full transition-colors" data-icon="language">language</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-low p-2 rounded-full transition-colors" data-icon="notifications">notifications</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden border border-outline-variant">
+<img alt="User avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjCNBEd0neDcbQa8E2vyGEBMvwzRqw_AciNl-5Py_r7yqXkkSfTobMggj_JospfTJsTa0vvaeQ1SuGoqCWMugDMOM2gIuVoMRmRV2no1l5xsZCP_EXvXwkT-0c-gYhJXMQ_qpzMgKyHWnw-f32yundD_v7F875O14PLYGFkc6x_J5pqShQUvWs2dsVGqzjiMKFrOhhXVWs5NubRowf8E_HiKhWJlTsfSim6rhQaEG7juzmQaXMZeKxCbDAH3-hoe6XCI4XIa2Q5Q-J"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full flex flex-col pt-16 z-40 bg-surface-container-low border-r border-outline-variant w-64 hidden md:flex">
+<div class="px-6 py-6 border-b border-outline-variant mb-4">
+<h2 class="font-headline-md text-headline-md font-black text-on-surface">RigExpert Pro</h2>
+<p class="font-label-md text-label-md text-on-surface-variant opacity-70">Technical Trade Tool</p>
+</div>
+<div class="flex-1 overflow-y-auto py-2">
+<div class="bg-secondary text-on-secondary rounded-lg mx-2 flex items-center gap-3 px-4 py-3 mb-1 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="translate">translate</span>
+<span class="font-label-md text-label-md">Translation</span>
+</div>
+<div class="text-on-surface-variant hover:bg-surface-variant mx-2 rounded-lg flex items-center gap-3 px-4 py-3 mb-1 cursor-pointer transition-all">
+<span class="material-symbols-outlined" data-icon="settings_input_component">settings_input_component</span>
+<span class="font-label-md text-label-md">Parts Glossary</span>
+</div>
+<div class="text-on-surface-variant hover:bg-surface-variant mx-2 rounded-lg flex items-center gap-3 px-4 py-3 mb-1 cursor-pointer transition-all">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="font-label-md text-label-md">Inquiry Management</span>
+</div>
+<div class="text-on-surface-variant hover:bg-surface-variant mx-2 rounded-lg flex items-center gap-3 px-4 py-3 mb-1 cursor-pointer transition-all">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-md text-label-md">User Profile</span>
+</div>
+<div class="mt-8 px-4">
+<button class="w-full py-3 bg-primary text-on-primary rounded font-label-md text-label-md font-bold uppercase tracking-wider hover:opacity-90 transition-opacity">
+                    New Inquiry
+                </button>
+</div>
+<div class="mt-8 px-4">
+<p class="text-[10px] uppercase font-bold text-outline mb-2 tracking-widest px-2">Common Phrases</p>
+<div class="space-y-1">
+<button class="w-full text-left px-3 py-2 text-on-surface-variant hover:bg-surface-variant rounded text-sm transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="payments">payments</span> Price quotation
+                    </button>
+<button class="w-full text-left px-3 py-2 text-on-surface-variant hover:bg-surface-variant rounded text-sm transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="local_shipping">local_shipping</span> Shipping terms
+                    </button>
+<button class="w-full text-left px-3 py-2 text-on-surface-variant hover:bg-surface-variant rounded text-sm transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="engineering">engineering</span> Technical specs
+                    </button>
+</div>
+</div>
+</div>
+<div class="mt-auto border-t border-outline-variant p-2">
+<div class="text-on-surface-variant hover:bg-surface-variant mx-2 rounded-lg flex items-center gap-3 px-4 py-3 mb-1 cursor-pointer transition-all">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</div>
+<div class="text-on-surface-variant hover:bg-surface-variant mx-2 rounded-lg flex items-center gap-3 px-4 py-3 mb-1 cursor-pointer transition-all">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-label-md text-label-md">Support</span>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:ml-64 pt-20 pb-16 px-gutter max-w-container-max mx-auto min-h-screen">
+<!-- Hero / Controls Row -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-primary mb-1">Precision Translation</h1>
+<p class="text-on-surface-variant font-body-md">Real-time trade communication for rotary drilling rig parts.</p>
+</div>
+<!-- Technical Mode Toggle -->
+<div class="flex items-center gap-4 bg-surface-container p-2 rounded-xl border border-outline-variant">
+<span class="font-label-md text-label-md text-on-surface-variant ml-2">Rotary Drilling Rig Mode</span>
+<button class="relative inline-flex h-6 w-11 items-center rounded-full bg-tertiary transition-colors focus:outline-none" id="mode-toggle" onclick="toggleMode(this)">
+<span class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-6" id="toggle-circle"></span>
+</button>
+</div>
+</div>
+<!-- Translation Engine (Side-by-Side) -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+<!-- Chinese Input Box -->
+<div class="flex flex-col bg-surface-container-lowest border-t-4 border-secondary rounded-lg shadow-sm overflow-hidden translation-glow">
+<div class="px-6 py-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+<div class="flex items-center gap-3">
+<span class="bg-primary text-on-primary text-[10px] font-bold px-2 py-0.5 rounded tracking-tighter">CN</span>
+<span class="font-label-md text-label-md uppercase">Mandarin (Simplified)</span>
+</div>
+<div class="flex gap-2">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors p-1" data-icon="mic" title="Voice Input">mic</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors p-1" data-icon="history" title="History">history</button>
+</div>
+</div>
+<div class="relative flex-1">
+<textarea class="w-full h-64 md:h-80 p-6 bg-transparent border-none focus:ring-0 text-on-surface font-body-lg resize-none placeholder:text-outline-variant" placeholder="在此处输入技术规格或贸易条款..."></textarea>
+</div>
+<div class="px-6 py-3 border-t border-outline-variant flex justify-between items-center text-on-surface-variant">
+<span class="text-xs font-data-mono">Characters: 0 / 5000</span>
+<button class="text-xs flex items-center gap-1 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="delete">delete</span> Clear
+                    </button>
+</div>
+</div>
+<!-- Vietnamese Output Box -->
+<div class="flex flex-col bg-surface-container-lowest border-t-4 border-tertiary-container rounded-lg shadow-sm overflow-hidden translation-glow">
+<div class="px-6 py-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+<div class="flex items-center gap-3">
+<span class="bg-tertiary-container text-on-tertiary text-[10px] font-bold px-2 py-0.5 rounded tracking-tighter">VN</span>
+<span class="font-label-md text-label-md uppercase">Tiếng Việt</span>
+</div>
+<div class="flex gap-2">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors p-1" data-icon="content_copy" title="Copy to Clipboard">content_copy</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors p-1" data-icon="volume_up" title="Listen">volume_up</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors p-1" data-icon="share" title="Share">share</button>
+</div>
+</div>
+<div class="relative flex-1 bg-surface-container-lowest/50">
+<div class="w-full h-64 md:h-80 p-6 text-on-surface font-body-lg overflow-y-auto leading-relaxed">
+<!-- Placeholder Result -->
+<span class="text-outline-variant italic">Bản dịch kỹ thuật sẽ xuất hiện ở đây...</span>
+</div>
+<!-- Technical Accuracy Badge -->
+<div class="absolute bottom-4 right-4 flex items-center gap-2 bg-tertiary-fixed text-on-tertiary-fixed px-3 py-1 rounded-full text-xs font-bold border border-on-tertiary-container/20">
+<span class="material-symbols-outlined text-[16px]" data-icon="verified_user" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+                        Technical Precision: 98.4%
+                    </div>
+</div>
+<div class="px-6 py-3 border-t border-outline-variant flex justify-between items-center text-on-surface-variant bg-tertiary-container/5">
+<div class="flex gap-4">
+<span class="text-xs flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500"></span> Engine Active</span>
+<span class="text-xs flex items-center gap-1 font-data-mono">Latency: 45ms</span>
+</div>
+<button class="text-xs text-tertiary font-bold hover:underline">View Parts Catalog</button>
+</div>
+</div>
+</div>
+<!-- Bento Grid of Features/Quick Actions -->
+<section class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Terminology Card -->
+<div class="md:col-span-2 bg-surface-container-low border border-outline-variant p-6 rounded-lg relative overflow-hidden group">
+<div class="relative z-10">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined p-2 bg-primary text-on-primary rounded" data-icon="menu_book">menu_book</span>
+<h3 class="font-headline-md text-headline-md">Industry Glossary</h3>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-white/60 p-3 border border-outline-variant rounded">
+<p class="text-[10px] font-bold text-outline-variant uppercase">CN: 旋挖钻机</p>
+<p class="text-sm font-bold text-on-surface">VN: Máy khoan xoay</p>
+<p class="text-xs text-on-surface-variant">Rotary Drilling Rig</p>
+</div>
+<div class="bg-white/60 p-3 border border-outline-variant rounded">
+<p class="text-[10px] font-bold text-outline-variant uppercase">CN: 凯氏钻杆</p>
+<p class="text-sm font-bold text-on-surface">VN: Thanh Kelly</p>
+<p class="text-xs text-on-surface-variant">Kelly Bar</p>
+</div>
+</div>
+<button class="mt-6 text-primary font-bold text-sm flex items-center gap-2 hover:translate-x-1 transition-transform">
+                        Explore Full Glossary <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<div class="absolute -right-8 -bottom-8 opacity-5 transition-transform group-hover:scale-110 duration-500">
+<span class="material-symbols-outlined text-[160px]" data-icon="settings_input_component">settings_input_component</span>
+</div>
+</div>
+<!-- Currency/Market Card -->
+<div class="bg-secondary-fixed text-on-secondary-fixed p-6 rounded-lg flex flex-col justify-between border border-secondary/20 shadow-sm relative overflow-hidden">
+<div class="relative z-10">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-secondary" data-icon="currency_exchange" style="font-variation-settings: 'wght' 600;">currency_exchange</span>
+<span class="bg-white/50 px-2 py-1 rounded text-[10px] font-black">+0.12% 24h</span>
+</div>
+<h3 class="font-headline-md text-headline-md leading-tight mb-2">Live Exchange Rate</h3>
+<div class="space-y-1">
+<div class="flex justify-between items-baseline">
+<span class="text-sm opacity-80">1 CNY =</span>
+<span class="font-data-mono text-xl font-black">3,450.25 VND</span>
+</div>
+<div class="flex justify-between items-baseline">
+<span class="text-sm opacity-80">1 USD =</span>
+<span class="font-data-mono text-xl font-black">25,410.00 VND</span>
+</div>
+</div>
+</div>
+<div class="mt-6 p-3 bg-white/30 rounded border border-on-secondary-fixed/10">
+<p class="text-[10px] uppercase font-bold mb-1">Trading Strategy</p>
+<p class="text-xs leading-tight">Stable conditions. Ideal for confirming long-term procurement contracts.</p>
+</div>
+<div class="absolute -left-12 -top-12 opacity-5">
+<span class="material-symbols-outlined text-[140px]" data-icon="trending_up">trending_up</span>
+</div>
+</div>
+</section>
+<!-- Technical Drawing / Visual Context Area -->
+<section class="mt-12">
+<div class="bg-surface border border-outline-variant rounded-lg overflow-hidden flex flex-col md:flex-row">
+<div class="w-full md:w-1/3 h-64 md:h-auto relative">
+<img class="w-full h-full object-cover" data-alt="A highly detailed close-up shot of heavy industrial hydraulic components for a rotary drilling rig. The machinery has a rugged, metallic texture with visible grease and bolt patterns. The lighting is sharp, professional industrial studio lighting with cold blue and warm yellow highlights. The composition is technical and precise, reflecting a mood of mechanical reliability and high-end engineering." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdKI3eurrU--GajKnx8aXPvMeH8rfEhqlkW86jicZqL-plyZZtIOQ7Q3aELql7tizpX_futoMLdsmTEUbdsqzEsx6135NfkmMXXN41sNiXxJ02Pt0L5dzYLPf7SNhvyGsi6z-4aOkdCU6vYclBanqIUJd5XcYOZ-xCI79XQQdNDms8vxcCAswK8BTaVrHFvcAslQMVp2DxaauwXbEa7Mhb8m4rN5qt67-hxQzxFApla7iAgrArcXygaktzdfDLqPR6o2HhExSlDnLL"/>
+<div class="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent flex flex-col justify-end p-6">
+<p class="text-white font-bold text-lg">Visual Parts Identifier</p>
+<p class="text-white/80 text-xs">AI-powered image-to-text translation coming soon.</p>
+</div>
+</div>
+<div class="flex-1 p-8">
+<div class="flex items-center gap-4 mb-6">
+<div class="w-12 h-12 rounded bg-tertiary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-fixed" data-icon="layers">layers</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md">Integrated Trade Ecosystem</h3>
+<p class="text-on-surface-variant text-sm">Beyond translation. Manage the entire procurement lifecycle.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary" data-icon="check_circle">check_circle</span>
+<div>
+<p class="font-bold text-sm">Automated Quoting</p>
+<p class="text-xs text-on-surface-variant">Convert chats into formal PDF inquiries instantly.</p>
+</div>
+</div>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary" data-icon="check_circle">check_circle</span>
+<div>
+<p class="font-bold text-sm">Logistics Mapping</p>
+<p class="text-xs text-on-surface-variant">Track cross-border shipments between CN &amp; VN.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 px-gutter bg-surface-container-lowest border-t border-outline-variant">
+<div class="max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-start gap-8">
+<div class="flex flex-col gap-4 max-w-sm">
+<span class="font-headline-md text-headline-md text-primary font-bold">RIG-EXPERT</span>
+<p class="text-on-surface-variant text-sm">The definitive technical trade tool for the Sino-Vietnamese drilling industry. Engineered for precision, built for reliability.</p>
+<div class="flex gap-4 mt-2">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors" data-icon="public">public</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors" data-icon="contact_support">contact_support</button>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-12">
+<div>
+<h4 class="font-label-md text-label-md uppercase text-primary mb-4 tracking-widest">Platform</h4>
+<ul class="space-y-2 text-on-surface-variant text-sm">
+<li class="hover:text-secondary cursor-pointer transition-colors">Translator</li>
+<li class="hover:text-secondary cursor-pointer transition-colors">Parts API</li>
+<li class="hover:text-secondary cursor-pointer transition-colors">Live Market</li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-md text-label-md uppercase text-primary mb-4 tracking-widest">Support</h4>
+<ul class="space-y-2 text-on-surface-variant text-sm">
+<li class="hover:text-secondary cursor-pointer transition-colors">Terms of Trade</li>
+<li class="hover:text-secondary cursor-pointer transition-colors">Privacy Policy</li>
+<li class="hover:text-secondary cursor-pointer transition-colors">Help Center</li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-md text-label-md uppercase text-primary mb-4 tracking-widest">Status</h4>
+<div class="bg-surface-container border border-outline-variant px-3 py-2 rounded">
+<p class="text-[10px] font-bold text-green-600 mb-1 flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-green-600"></span> ALL SYSTEMS ONLINE
+                        </p>
+<p class="text-[10px] opacity-60">Version 2.4.1 (Stable Build)</p>
+</div>
+</div>
+</div>
+</div>
+<div class="max-w-container-max mx-auto mt-12 pt-8 border-t border-outline-variant flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="font-label-md text-label-md text-on-surface-variant">© 2024 RigExpert Technical Trade. All rights reserved.</p>
+<div class="flex items-center gap-2">
+<span class="text-xs text-on-surface-variant">Powered by</span>
+<span class="font-bold text-sm tracking-widest">NEURAL-RIG AI</span>
+</div>
+</div>
+</footer>
+<script>
+        function toggleMode(el) {
+            const circle = document.getElementById('toggle-circle');
+            const isActive = circle.classList.contains('translate-x-6');
+            
+            if (isActive) {
+                circle.classList.remove('translate-x-6');
+                circle.classList.add('translate-x-1');
+                el.classList.remove('bg-tertiary');
+                el.classList.add('bg-outline');
+            } else {
+                circle.classList.remove('translate-x-1');
+                circle.classList.add('translate-x-6');
+                el.classList.remove('bg-outline');
+                el.classList.add('bg-tertiary');
+            }
+        }
+
+        // Simple typing interaction effect
+        const textarea = document.querySelector('textarea');
+        const characterCount = document.querySelector('.font-data-mono');
+        
+        textarea.addEventListener('input', (e) => {
+            const length = e.target.value.length;
+            characterCount.textContent = `Characters: ${length} / 5000`;
+            
+            // Artificial delay to simulate "Thinking" in the other box if needed
+        });
+    </script>
+</body></html>
