@@ -41,10 +41,34 @@ export const useGlossaryStore = defineStore('glossary', () => {
     save()
   }
 
+  function updateTerm(index, term) {
+    terms.value[index] = { ...term }
+    save()
+  }
+
+  function deleteTerm(index) {
+    terms.value.splice(index, 1)
+    save()
+  }
+
+  function isDuplicate(term, excludeIndex = -1) {
+    return terms.value.some((t, i) =>
+      i !== excludeIndex &&
+      t.cn === term.cn &&
+      t.vn === term.vn &&
+      t.en === term.en
+    )
+  }
+
   const categories = computed(() => {
     const cats = new Set(terms.value.map(t => t.category))
     return ['全部', ...Array.from(cats)]
   })
 
-  return { terms, search, addTerm, categories }
+  const categoryOptions = computed(() => {
+    const cats = new Set(terms.value.map(t => t.category))
+    return Array.from(cats)
+  })
+
+  return { terms, search, addTerm, updateTerm, deleteTerm, isDuplicate, categories, categoryOptions }
 })
