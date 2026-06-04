@@ -7,7 +7,7 @@ const rates = useExchangeRateStore()
 <template>
   <header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-surface border-b border-outline-variant">
     <div class="flex items-center gap-8">
-      <span class="text-2xl font-bold text-primary tracking-tight">中越翻译工具</span>
+      <span class="text-2xl font-bold text-primary tracking-tight">TradeFlow</span>
       <nav class="hidden md:flex items-center gap-6">
         <div class="flex items-center gap-2 text-secondary font-bold border-b-2 border-secondary px-1 h-16 cursor-pointer">
           <span class="text-sm">CNY/VND: {{ rates.cnyToVnd.toLocaleString() }}</span>
