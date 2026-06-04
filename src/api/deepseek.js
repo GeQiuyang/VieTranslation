@@ -1,0 +1,60 @@
+const API_BASE = 'https://api.deepseek.com/v1/chat/completions'
+
+const SYSTEM_PROMPTS = {
+  general: '你是一名专业的中文-越南语翻译专家。请将以下内容准确翻译到目标语言，保持原意和语气。只返回翻译结果，不要加任何解释。',
+  technical: '你是旋挖钻机行业的中越翻译专家。精通钻杆（Kelly Bar）、钻头（Drill Bit）、动力头（Rotary Head）、液压系统（Hydraulic System）、底盘（Undercarriage）、变幅机构（Luffing Mechanism）等术语。请使用行业标准译法翻译以下内容，保留技术规格的数值精度。只返回翻译结果，不要加任何解释。'
+}
+
+const LANG_NAMES = {
+  zh: 'Vietnamese',
+  vi: 'Chinese'
+}
+
+export async function translateText({ text, sourceLang, targetLang, mode = 'general', apiKey }) {
+  if (!apiKey) {
+    throw new Error('missing_api_key')
+  }
+  if (!text?.trim()) {
+    throw new Error('empty_input')
+  }
+
+  const systemPrompt = `${SYSTEM_PROMPTS[mode] || SYSTEM_PROMPTS.general} 将以下${sourceLang === 'zh' ? '中文' : '越南语'}翻译成${targetLang === 'zh' ? '中文' : '越南语'}。`
+
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), 10000)
+
+  try {
+    const response = await fetch(API_BASE, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'deepseek-chat',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: text }
+        ],
+        temperature: 0.3,
+        max_tokens: 4096
+      }),
+      signal: controller.signal
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
+      if (response.status === 429) throw new Error('rate_limited')
+      if (response.status === 401) throw new Error('invalid_api_key')
+      throw new Error(errorData.error?.message || `API error: ${response.status}`)
+    }
+
+    const data = await response.json()
+    return data.choices[0].message.content.trim()
+  } catch (err) {
+    if (err.name === 'AbortError') throw new Error('timeout')
+    throw err
+  } finally {
+    clearTimeout(timeoutId)
+  }
+}
