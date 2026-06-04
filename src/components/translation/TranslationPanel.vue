@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 const props = defineProps({
   type: { type: String, required: true }, // 'input' | 'output'
@@ -10,7 +10,35 @@ const props = defineProps({
   maxChars: { type: Number, default: 5000 }
 })
 
-const emit = defineEmits(['update:modelValue', 'clear', 'translate'])
+const emit = defineEmits(['update:modelValue', 'clear', 'translate', 'show-history'])
+const copied = ref(false)
+const speaking = ref(false)
+
+async function doCopy() {
+  await navigator.clipboard.writeText(props.modelValue)
+  copied.value = true
+  setTimeout(() => copied.value = false, 1500)
+}
+
+async function doShare() {
+  if (navigator.share) {
+    await navigator.share({ text: props.modelValue })
+  } else {
+    await doCopy()
+  }
+}
+
+function doSpeak() {
+  if (!props.modelValue) return
+  const langCode = props.language === 'zh' ? 'zh-CN' : 'vi-VN'
+  const utterance = new SpeechSynthesisUtterance(props.modelValue)
+  utterance.lang = langCode
+  utterance.rate = 0.9
+  speaking.value = true
+  utterance.onend = () => { speaking.value = false }
+  utterance.onerror = () => { speaking.value = false }
+  speechSynthesis.speak(utterance)
+}
 
 const label = computed(() => props.language === 'zh' ? '中文 (Simplified)' : 'Tiếng Việt')
 const badge = computed(() => props.language === 'zh' ? 'CN' : 'VN')
@@ -54,16 +82,21 @@ function onInput(e) {
       <div class="flex gap-2">
         <template v-if="type === 'input'">
           <button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors p-1 cursor-pointer" title="Voice Input">mic</button>
-          <button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors p-1 cursor-pointer" title="History">history</button>
+          <button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors p-1 cursor-pointer" title="History" @click="$emit('show-history')">history</button>
         </template>
         <template v-else>
           <button
+            class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors p-1 cursor-pointer relative"
+            :title="copied ? 'Copied!' : 'Copy'"
+            @click="doCopy"
+          >{{ copied ? 'check' : 'content_copy' }}</button>
+          <button
             class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors p-1 cursor-pointer"
-            title="Copy"
-            @click="navigator.clipboard.writeText(modelValue)"
-          >content_copy</button>
-          <button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors p-1 cursor-pointer" title="Listen">volume_up</button>
-          <button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors p-1 cursor-pointer" title="Share">share</button>
+            :class="{ 'text-tertiary': speaking }"
+            :title="speaking ? 'Speaking...' : 'Listen'"
+            @click="doSpeak"
+          >volume_up</button>
+          <button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors p-1 cursor-pointer" title="Share" @click="doShare">share</button>
         </template>
       </div>
     </div>

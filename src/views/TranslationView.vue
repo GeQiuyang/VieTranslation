@@ -1,10 +1,11 @@
 <script setup>
-import { watch } from 'vue'
+import { ref, watch } from 'vue'
 import { useTranslationStore } from '@/stores/translation.js'
 import LanguageToggle from '@/components/translation/LanguageToggle.vue'
 import TranslationPanel from '@/components/translation/TranslationPanel.vue'
 
 const store = useTranslationStore()
+const showHistory = ref(false)
 
 let debounceTimer = null
 watch(() => store.inputText, () => {
@@ -23,6 +24,20 @@ function handleClear() {
 
 function handleTranslate() {
   store.translate()
+}
+
+function handleShowHistory() {
+  showHistory.value = !showHistory.value
+}
+
+function loadEntry(entry) {
+  store.loadFromHistory(entry)
+  showHistory.value = false
+}
+
+function clearAllHistory() {
+  store.clearHistory()
+  showHistory.value = false
 }
 </script>
 
@@ -61,6 +76,7 @@ function handleTranslate() {
         v-model="store.inputText"
         @clear="handleClear"
         @translate="handleTranslate"
+        @show-history="handleShowHistory"
       />
       <TranslationPanel
         type="output"
@@ -70,6 +86,47 @@ function handleTranslate() {
         :error="store.error"
         @translate="handleTranslate"
       />
+    </div>
+
+    <!-- Translation History Panel -->
+    <div v-if="showHistory" class="mt-8 bg-surface-container-lowest border border-outline-variant rounded-lg p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-bold text-primary">Translation History</h3>
+        <div class="flex gap-2">
+          <button
+            v-if="store.history.length"
+            class="text-xs text-error hover:underline cursor-pointer"
+            @click="clearAllHistory"
+          >Clear All</button>
+          <button
+            class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer"
+            @click="showHistory = false"
+          >close</button>
+        </div>
+      </div>
+      <div v-if="!store.history.length" class="text-on-surface-variant text-sm text-center py-8">
+        No translation history yet. Start translating to see your history here.
+      </div>
+      <div v-else class="space-y-2 max-h-96 overflow-y-auto">
+        <div
+          v-for="entry in store.history"
+          :key="entry.id"
+          class="flex items-start gap-4 p-3 border border-outline-variant rounded-lg hover:bg-surface-container-low cursor-pointer transition-colors"
+          @click="loadEntry(entry)"
+        >
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-surface-container-high text-on-surface-variant">
+                {{ entry.sourceLang.toUpperCase() }} → {{ entry.targetLang.toUpperCase() }}
+              </span>
+              <span class="text-[10px] text-outline">{{ entry.time }}</span>
+            </div>
+            <p class="text-sm text-on-surface truncate">{{ entry.input }}</p>
+            <p class="text-xs text-on-surface-variant truncate mt-0.5">{{ entry.output }}</p>
+          </div>
+          <span class="material-symbols-outlined text-outline text-base shrink-0">arrow_forward</span>
+        </div>
+      </div>
     </div>
 
   </div>

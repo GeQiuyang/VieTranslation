@@ -1,5 +1,6 @@
 <script setup>
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import { useTranslationStore } from '@/stores/translation.js'
 
 defineProps({
   visible: { type: Boolean, default: true }
@@ -7,6 +8,8 @@ defineProps({
 defineEmits(['close'])
 
 const route = useRoute()
+const router = useRouter()
+const store = useTranslationStore()
 
 const navItems = [
   { path: '/', icon: 'translate', label: 'Translation' },
@@ -16,10 +19,15 @@ const navItems = [
 ]
 
 const commonPhrases = [
-  { icon: 'payments', label: 'Price quotation' },
-  { icon: 'local_shipping', label: 'Shipping terms' },
-  { icon: 'engineering', label: 'Technical specs' }
+  { key: 'price', icon: 'payments', label: 'Price quotation' },
+  { key: 'shipping', icon: 'local_shipping', label: 'Shipping terms' },
+  { key: 'technical', icon: 'engineering', label: 'Technical specs' }
 ]
+
+function usePhrase(key) {
+  store.useCommonPhrase(key)
+  if (route.path !== '/') router.push('/')
+}
 </script>
 
 <template>
@@ -56,8 +64,9 @@ const commonPhrases = [
         <div class="space-y-1">
           <button
             v-for="phrase in commonPhrases"
-            :key="phrase.label"
+            :key="phrase.key"
             class="w-full text-left px-3 py-2 text-on-surface-variant hover:bg-surface-variant rounded text-sm transition-colors flex items-center gap-2 cursor-pointer"
+            @click="usePhrase(phrase.key)"
           >
             <span class="material-symbols-outlined text-lg">{{ phrase.icon }}</span>
             {{ phrase.label }}
@@ -117,8 +126,9 @@ const commonPhrases = [
         <div class="space-y-1">
           <button
             v-for="phrase in commonPhrases"
-            :key="phrase.label"
+            :key="phrase.key"
             class="w-full text-left px-3 py-2 text-on-surface-variant hover:bg-surface-variant rounded text-sm transition-colors flex items-center gap-2 cursor-pointer"
+            @click="usePhrase(phrase.key)"
           >
             <span class="material-symbols-outlined text-lg">{{ phrase.icon }}</span>
             {{ phrase.label }}

@@ -2,6 +2,21 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { translateText } from '@/api/deepseek.js'
 
+const COMMON_PHRASES = {
+  'price': {
+    zh: '请提供该产品的报价，包括FOB价格和最小起订量。',
+    vi: 'Vui lòng cung cấp báo giá cho sản phẩm này, bao gồm giá FOB và số lượng đặt hàng tối thiểu.'
+  },
+  'shipping': {
+    zh: '请说明运输条款和预计交货时间。',
+    vi: 'Vui lòng cho biết điều khoản vận chuyển và thời gian giao hàng dự kiến.'
+  },
+  'technical': {
+    zh: '请提供该设备的技术参数和规格说明。',
+    vi: 'Vui lòng cung cấp thông số kỹ thuật và mô tả thông số của thiết bị này.'
+  }
+}
+
 export const useTranslationStore = defineStore('translation', () => {
   const sourceLang = ref('zh')
   const targetLang = ref('vi')
@@ -10,11 +25,51 @@ export const useTranslationStore = defineStore('translation', () => {
   const isLoading = ref(false)
   const error = ref(null)
   const mode = ref('general')
+  const history = ref(JSON.parse(localStorage.getItem('translation_history') || '[]'))
 
   const characterCount = computed(() => inputText.value.length)
 
   function getApiKey() {
     return import.meta.env.VITE_DEEPSEEK_API_KEY || localStorage.getItem('deepseek_api_key') || ''
+  }
+
+  function saveHistory() {
+    localStorage.setItem('translation_history', JSON.stringify(history.value))
+  }
+
+  function addToHistory() {
+    if (!outputText.value || !inputText.value) return
+    history.value.unshift({
+      id: Date.now(),
+      sourceLang: sourceLang.value,
+      targetLang: targetLang.value,
+      input: inputText.value,
+      output: outputText.value,
+      time: new Date().toLocaleString()
+    })
+    if (history.value.length > 20) history.value.pop()
+    saveHistory()
+  }
+
+  function loadFromHistory(entry) {
+    sourceLang.value = entry.sourceLang
+    targetLang.value = entry.targetLang
+    inputText.value = entry.input
+    outputText.value = entry.output
+    error.value = null
+  }
+
+  function clearHistory() {
+    history.value = []
+    saveHistory()
+  }
+
+  function useCommonPhrase(key) {
+    const phrase = COMMON_PHRASES[key]
+    if (!phrase) return
+    inputText.value = phrase[sourceLang.value] || phrase.zh
+    outputText.value = ''
+    error.value = null
   }
 
   async function translate() {
@@ -43,6 +98,7 @@ export const useTranslationStore = defineStore('translation', () => {
         mode: mode.value,
         apiKey
       })
+      addToHistory()
     } catch (err) {
       error.value = err.message
       outputText.value = ''
@@ -72,7 +128,8 @@ export const useTranslationStore = defineStore('translation', () => {
 
   return {
     sourceLang, targetLang, inputText, outputText,
-    isLoading, error, mode, characterCount,
-    translate, swapLanguages, clearInput, setApiKey, getApiKey
+    isLoading, error, mode, characterCount, history,
+    translate, swapLanguages, clearInput, setApiKey, getApiKey,
+    useCommonPhrase, loadFromHistory, clearHistory, addToHistory
   }
 })
