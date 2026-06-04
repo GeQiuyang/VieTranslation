@@ -16,6 +16,7 @@ const navItems = [
   { path: '/glossary', icon: 'settings_input_component', label: 'Parts Inventory' },
   { path: '/inquiry', icon: 'description', label: 'Inquiry Management' },
   { path: '/marketing', icon: 'auto_awesome', label: 'Marketing' },
+  { path: '/business', icon: 'person_search', label: 'Business Developing' },
 ]
 
 function saveApiKey() {

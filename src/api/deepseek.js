@@ -58,6 +58,54 @@ export async function translateText({ text, sourceLang, targetLang, mode = 'gene
   }
 }
 
+export async function searchCustomers({ keyword, apiKey }) {
+  if (!apiKey) throw new Error('missing_api_key')
+  if (!keyword?.trim()) throw new Error('empty_keyword')
+
+  const systemPrompt = `你是一名中越贸易客户开发专家。请根据产品关键词，生成10个潜在客户信息。客户应该是越南相关的贸易公司、进口商或经销商。以严格的JSON数组格式返回，每个对象包含以下字段：company（公司名称）、contact（联系人）、email（邮箱）、address（公司地址）、social（社交媒体，如LinkedIn/Facebook链接）、legalRep（公司法人）。只返回JSON数组，不要加任何解释或markdown格式。`
+
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), 20000)
+
+  try {
+    const response = await fetch(API_BASE, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'deepseek-chat',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: keyword }
+        ],
+        temperature: 0.5,
+        max_tokens: 4096
+      }),
+      signal: controller.signal
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
+      if (response.status === 429) throw new Error('rate_limited')
+      if (response.status === 401) throw new Error('invalid_api_key')
+      throw new Error(errorData.error?.message || `API error: ${response.status}`)
+    }
+
+    const data = await response.json()
+    const raw = data.choices[0].message.content.trim()
+    const jsonStr = raw.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
+    return JSON.parse(jsonStr)
+  } catch (err) {
+    if (err.name === 'AbortError') throw new Error('timeout')
+    if (err instanceof SyntaxError) throw new Error('parse_error')
+    throw err
+  } finally {
+    clearTimeout(timeoutId)
+  }
+}
+
 export async function generateMarketingCopy({ productName, wordCount, apiKey }) {
   if (!apiKey) throw new Error('missing_api_key')
   if (!productName?.trim()) throw new Error('empty_product')
