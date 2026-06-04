@@ -20,9 +20,6 @@ function addTerm() {
 
 <template>
   <div>
-    <h1 class="text-4xl font-bold text-primary mb-2">Industry Glossary</h1>
-    <p class="text-on-surface-variant text-base mb-8">Chinese-Vietnamese technical terminology for rotary drilling rig parts.</p>
-
     <!-- Search & Filter -->
     <div class="flex flex-col sm:flex-row gap-4 mb-6">
       <div class="relative flex-1">

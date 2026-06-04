@@ -45,10 +45,6 @@ function clearAllHistory() {
   <div>
     <!-- Hero / Controls Row -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-      <div>
-        <h1 class="text-4xl font-bold text-primary mb-1">Precision Translation</h1>
-        <p class="text-on-surface-variant text-base">Real-time trade communication for rotary drilling rig parts.</p>
-      </div>
       <!-- Technical Mode Toggle -->
       <div class="flex items-center gap-4 bg-surface-container p-2 rounded-xl border border-outline-variant">
         <span class="text-sm font-semibold text-on-surface-variant ml-2">Rotary Drilling Rig Mode</span>
