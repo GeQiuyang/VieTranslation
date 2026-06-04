@@ -41,13 +41,13 @@ const errorLabels = {
           <input
             v-model.number="store.wordCount"
             type="range"
-            min="50"
+            min="20"
             max="500"
-            step="50"
+            step="10"
             class="w-full accent-secondary"
           />
           <div class="flex justify-between text-[10px] text-outline mt-0.5">
-            <span>50</span><span>500</span>
+            <span>20</span><span>500</span>
           </div>
         </div>
         <button
