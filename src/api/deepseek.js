@@ -1,101 +1,261 @@
 const API_BASE = 'https://api.deepseek.com/v1/chat/completions'
 
-const SYSTEM_PROMPTS = {
-  general: '你是一名专业的中文-越南语-英语翻译专家。请将以下内容准确翻译到目标语言，保持原意和语气。只返回翻译结果，不要加任何解释。',
-  technical: `你是旋挖钻机行业的中越英翻译专家，具有十年以上行业经验。你必须使用以下标准术语进行翻译，确保术语一致性和准确性。保留所有数字、尺寸、规格参数的原始数值精度。
+const TERMS_ZH_VI = `## 标准术语对照 (Tiêu chuẩn thuật ngữ)
+整机与系统:
+- 旋挖钻机 = Máy khoan xoay
+- 液压系统 = Hệ thống thủy lực
+- 电控系统 = Hệ thống điều khiển điện
+- 润滑系统 = Hệ thống bôi trơn
+- 冷却系统 = Hệ thống làm mát
+- 行走系统 = Hệ thống di chuyển
 
-## 整机与系统 (Complete Machine & Systems)
-- 旋挖钻机 = Máy khoan xoay = Rotary Drilling Rig
-- 液压系统 = Hệ thống thủy lực = Hydraulic System
-- 电控系统 = Hệ thống điều khiển điện = Electrical Control System
-- 润滑系统 = Hệ thống bôi trơn = Lubrication System
-- 冷却系统 = Hệ thống làm mát = Cooling System
-- 行走系统 = Hệ thống di chuyển = Travel System
+钻杆与钻头:
+- 导管 = Ống tremi
+- 凯氏钻杆 = Thanh Kelly
+- 摩擦钻杆 = Cần khoan ma sát
+- 机锁钻杆 = Cần khoan khóa cơ
+- 钻头 = Mũi khoan
+- 筒钻 = Mũi khoan thùng
+- 螺旋钻头 = Mũi khoan xoắn
+- 扩底钻头 = Mũi khoan mở rộng đáy
+- 取芯钻头 = Mũi khoan lấy lõi
+- 截齿 = Răng cắt
 
-## 钻杆与钻头 (Drill Pipes & Bits)
-- 凯氏钻杆 = Thanh Kelly = Kelly Bar
-- 摩擦钻杆 = Cần khoan ma sát = Friction Kelly Bar
-- 机锁钻杆 = Cần khoan khóa cơ = Interlocking Kelly Bar
-- 钻头 = Mũi khoan = Drill Bit
-- 筒钻 = Mũi khoan thùng = Core Barrel / Bucket
-- 螺旋钻头 = Mũi khoan xoắn = Auger Drill Bit
-- 扩底钻头 = Mũi khoan mở rộng đáy = Belling Bucket
-- 取芯钻头 = Mũi khoan lấy lõi = Coring Bit
-- 截齿 = Răng cắt = Cutting Pick
+动力头:
+- 动力头 = Đầu quay
+- 减速机 = Hộp giảm tốc
+- 马达 = Mô tơ
+- 轴承 = Vòng bi
 
-## 动力头 (Rotary Head)
-- 动力头 = Đầu quay = Rotary Head
-- 减速机 = Hộp giảm tốc = Gearbox / Reducer
-- 马达 = Mô tơ = Motor
-- 轴承 = Vòng bi = Bearing
+液压元件:
+- 加压油缸 = Xi lanh áp lực
+- 变幅油缸 = Xi lanh thay đổi biên độ
+- 液压泵 = Bơm thủy lực
+- 液压阀 = Van thủy lực
+- 液压马达 = Mô tơ thủy lực
+- 油封 = Phốt dầu
+- 滤芯 = Lõi lọc
 
-## 液压元件 (Hydraulic Components)
-- 加压油缸 = Xi lanh áp lực = Feed Cylinder
-- 变幅油缸 = Xi lanh thay đổi biên độ = Luffing Cylinder
-- 液压泵 = Bơm thủy lực = Hydraulic Pump
-- 液压阀 = Van thủy lực = Hydraulic Valve
-- 液压马达 = Mô tơ thủy lực = Hydraulic Motor
-- 液压油缸 = Xi lanh thủy lực = Hydraulic Cylinder
-- 油封 = Phốt dầu = Oil Seal
-- 滤芯 = Lõi lọc = Filter Element
+底盘与履带:
+- 底盘 = Khung gầm
+- 履带 = Xích
+- 履带板 = Tấm xích
+- 支重轮 = Bánh đỡ xích
+- 引导轮 = Bánh dẫn hướng
+- 驱动轮 = Bánh dẫn động
+- 张紧装置 = Thiết bị căng xích
 
-## 底盘与履带 (Undercarriage & Tracks)
-- 底盘 = Khung gầm = Undercarriage
-- 履带 = Xích = Track / Crawler
-- 履带板 = Tấm xích = Track Pad
-- 支重轮 = Bánh đỡ xích = Track Roller
-- 引导轮 = Bánh dẫn hướng = Idler
-- 驱动轮 = Bánh dẫn động = Sprocket
-- 张紧装置 = Thiết bị căng xích = Track Tensioner
+结构件:
+- 桅杆 = Cột chống
+- 变幅机构 = Cơ cấu thay đổi biên độ
+- 回转机构 = Cơ cấu xoay
+- 回转支承 = Vòng bi xoay
+- 配重 = Đối trọng
+- 主平台 = Sàn chính
 
-## 桅杆与结构件 (Mast & Structural Parts)
-- 桅杆 = Cột chống = Mast
-- 变幅机构 = Cơ cấu thay đổi biên độ = Luffing Mechanism
-- 回转机构 = Cơ cấu xoay = Slewing Mechanism
-- 回转支承 = Vòng bi xoay = Slewing Bearing
-- 配重 = Đối trọng = Counterweight
-- 主平台 = Sàn chính = Main Platform
-- 护栏 = Lan can = Guardrail
+卷扬与钢丝绳:
+- 主卷扬 = Tời chính
+- 副卷扬 = Tời phụ
+- 钢丝绳 = Cáp thép
+- 滑轮组 = Cụm ròng rọc
+- 吊钩 = Móc cẩu
 
-## 卷扬与钢丝绳 (Winch & Wire Rope)
-- 主卷扬 = Tời chính = Main Winch
-- 副卷扬 = Tời phụ = Auxiliary Winch
-- 钢丝绳 = Cáp thép = Wire Rope
-- 滑轮组 = Cụm ròng rọc = Pulley Block
-- 吊钩 = Móc cẩu = Hook
+发动机与动力:
+- 发动机 = Động cơ
+- 柴油机 = Động cơ diesel
+- 散热器 = Két tản nhiệt
+- 蓄电池 = Ắc quy
+- 发电机 = Máy phát điện
 
-## 发动机与动力 (Engine & Power)
-- 发动机 = Động cơ = Engine
-- 柴油机 = Động cơ diesel = Diesel Engine
-- 散热器 = Két tản nhiệt = Radiator
-- 蓄电池 = Ắc quy = Battery
-- 发电机 = Máy phát điện = Generator
+控制系统:
+- 控制面板 = Bảng điều khiển
+- 显示器 = Màn hình
+- 传感器 = Cảm biến
+- 电磁阀 = Van điện từ
+- PLC控制器 = Bộ điều khiển PLC
 
-## 控制系统 (Control System)
-- 控制面板 = Bảng điều khiển = Control Panel
-- 显示器 = Màn hình = Display / Monitor
-- 传感器 = Cảm biến = Sensor
-- 电磁阀 = Van điện từ = Solenoid Valve
-- PLC控制器 = Bộ điều khiển PLC = PLC Controller
+维修配件:
+- 密封件 = Phớt làm kín
+- 垫圈 = Vòng đệm
+- 螺栓 = Bu lông
+- 螺母 = Đai ốc
+- 销轴 = Chốt trục
+- 衬套 = Bạc lót
 
-## 维修配件 (Maintenance Parts)
-- 密封件 = Phớt làm kín = Seal
-- 垫圈 = Vòng đệm = Washer / Gasket
-- 螺栓 = Bu lông = Bolt
-- 螺母 = Đai ốc = Nut
-- 销轴 = Chốt trục = Pin
-- 衬套 = Bạc lót = Bushing
-
-## 贸易术语 (Trade Terms)
+贸易术语:
 - FOB = FOB (Giao tại cảng)
 - CIF = CIF (Bao gồm phí bảo hiểm và cước)
 - 最小起订量 = Số lượng đặt hàng tối thiểu (MOQ)
 - 交货期 = Thời gian giao hàng
 - 技术参数 = Thông số kỹ thuật
 - 操作手册 = Hướng dẫn vận hành
-- 保修期 = Thời gian bảo hành
+- 保修期 = Thời gian bảo hành`
 
-请严格按照上述术语表进行翻译。只返回翻译结果，不要加任何解释。`
+const TERMS_ZH_EN = `## Standard Terminology Reference
+Complete Machine & Systems:
+- 旋挖钻机 = Rotary Drilling Rig
+- 液压系统 = Hydraulic System
+- 电控系统 = Electrical Control System
+- 润滑系统 = Lubrication System
+- 冷却系统 = Cooling System
+- 行走系统 = Travel System
+
+Drill Pipes & Bits:
+- 导管 = Tremie Pipe
+- 凯氏钻杆 = Kelly Bar
+- 摩擦钻杆 = Friction Kelly Bar
+- 机锁钻杆 = Interlocking Kelly Bar
+- 钻头 = Drill Bit
+- 筒钻 = Core Barrel / Bucket
+- 螺旋钻头 = Auger Drill Bit
+- 扩底钻头 = Belling Bucket
+- 取芯钻头 = Coring Bit
+- 截齿 = Cutting Pick
+
+Rotary Head:
+- 动力头 = Rotary Head
+- 减速机 = Gearbox / Reducer
+- 马达 = Motor
+- 轴承 = Bearing
+
+Hydraulic Components:
+- 加压油缸 = Feed Cylinder
+- 变幅油缸 = Luffing Cylinder
+- 液压泵 = Hydraulic Pump
+- 液压阀 = Hydraulic Valve
+- 液压马达 = Hydraulic Motor
+- 油封 = Oil Seal
+- 滤芯 = Filter Element
+
+Undercarriage & Tracks:
+- 底盘 = Undercarriage
+- 履带 = Track / Crawler
+- 履带板 = Track Pad
+- 支重轮 = Track Roller
+- 引导轮 = Idler
+- 驱动轮 = Sprocket
+- 张紧装置 = Track Tensioner
+
+Structural Parts:
+- 桅杆 = Mast
+- 变幅机构 = Luffing Mechanism
+- 回转机构 = Slewing Mechanism
+- 回转支承 = Slewing Bearing
+- 配重 = Counterweight
+- 主平台 = Main Platform
+
+Winch & Wire Rope:
+- 主卷扬 = Main Winch
+- 副卷扬 = Auxiliary Winch
+- 钢丝绳 = Wire Rope
+- 滑轮组 = Pulley Block
+- 吊钩 = Hook
+
+Engine & Power:
+- 发动机 = Engine
+- 柴油机 = Diesel Engine
+- 散热器 = Radiator
+- 蓄电池 = Battery
+- 发电机 = Generator
+
+Control System:
+- 控制面板 = Control Panel
+- 显示器 = Display / Monitor
+- 传感器 = Sensor
+- 电磁阀 = Solenoid Valve
+- PLC控制器 = PLC Controller
+
+Maintenance Parts:
+- 密封件 = Seal
+- 垫圈 = Washer / Gasket
+- 螺栓 = Bolt
+- 螺母 = Nut
+- 销轴 = Pin
+- 衬套 = Bushing
+
+Trade Terms:
+- FOB = FOB
+- CIF = CIF
+- 最小起订量 = MOQ
+- 交货期 = Delivery Time
+- 技术参数 = Technical Specifications
+- 操作手册 = Operation Manual
+- 保修期 = Warranty Period`
+
+const TERMS_VI_EN = `## Standard Terminology Reference
+- Máy khoan xoay = Rotary Drilling Rig
+- Thanh Kelly = Kelly Bar
+- Mũi khoan = Drill Bit
+- Đầu quay = Rotary Head
+- Hệ thống thủy lực = Hydraulic System
+- Khung gầm = Undercarriage
+- Cơ cấu thay đổi biên độ = Luffing Mechanism
+- Cột chống = Mast
+- Xi lanh áp lực = Feed Cylinder
+- Tời chính = Main Winch
+- Ống tremi = Tremie Pipe
+- Cần khoan ma sát = Friction Kelly Bar
+- Cần khoan khóa cơ = Interlocking Kelly Bar
+- Mũi khoan thùng = Core Barrel / Bucket
+- Mũi khoan xoắn = Auger Drill Bit
+- Mũi khoan mở rộng đáy = Belling Bucket
+- Mũi khoan lấy lõi = Coring Bit
+- Răng cắt = Cutting Pick
+- Hộp giảm tốc = Gearbox / Reducer
+- Mô tơ = Motor
+- Vòng bi = Bearing
+- Xi lanh thủy lực = Hydraulic Cylinder
+- Bơm thủy lực = Hydraulic Pump
+- Van thủy lực = Hydraulic Valve
+- Mô tơ thủy lực = Hydraulic Motor
+- Phốt dầu = Oil Seal
+- Lõi lọc = Filter Element
+- Xích = Track / Crawler
+- Tấm xích = Track Pad
+- Bánh đỡ xích = Track Roller
+- Bánh dẫn hướng = Idler
+- Bánh dẫn động = Sprocket
+- Thiết bị căng xích = Track Tensioner
+- Cơ cấu xoay = Slewing Mechanism
+- Vòng bi xoay = Slewing Bearing
+- Đối trọng = Counterweight
+- Sàn chính = Main Platform
+- Tời phụ = Auxiliary Winch
+- Cáp thép = Wire Rope
+- Cụm ròng rọc = Pulley Block
+- Móc cẩu = Hook
+- Động cơ = Engine
+- Động cơ diesel = Diesel Engine
+- Két tản nhiệt = Radiator
+- Ắc quy = Battery
+- Máy phát điện = Generator
+- Bảng điều khiển = Control Panel
+- Màn hình = Display / Monitor
+- Cảm biến = Sensor
+- Van điện từ = Solenoid Valve
+- Bộ điều khiển PLC = PLC Controller
+- Phớt làm kín = Seal
+- Vòng đệm = Washer / Gasket
+- Bu lông = Bolt
+- Đai ốc = Nut
+- Chốt trục = Pin
+- Bạc lót = Bushing`
+
+function getTechnicalPrompt(sourceLang, targetLang) {
+  const pair = `${sourceLang}${targetLang}`
+  let termTable = ''
+  if (pair === 'zhvi' || pair === 'vizh') termTable = TERMS_ZH_VI
+  else if (pair === 'zhen' || pair === 'enzh') termTable = TERMS_ZH_EN
+  else if (pair === 'vien' || pair === 'envi') termTable = TERMS_VI_EN
+
+  const srcNames = { zh: '中文', vi: '越南语', en: '英语' }
+  const tgtNames = { zh: '中文', vi: '越南语', en: '英语' }
+
+  return `你是旋挖钻机行业翻译专家。将以下${srcNames[sourceLang]}内容翻译成${tgtNames[targetLang]}。只输出${tgtNames[targetLang]}，不要输出其他语言。严格使用以下标准术语，保持数字精度。
+
+${termTable}
+
+只返回翻译结果，不要加任何解释或备注。`
 }
 
 const LANG_NAMES = {
@@ -108,9 +268,15 @@ export async function translateText({ text, sourceLang, targetLang, mode = 'gene
   if (!apiKey) throw new Error('missing_api_key')
   if (!text?.trim()) throw new Error('empty_input')
 
-  const srcName = LANG_NAMES[sourceLang] || sourceLang
-  const tgtName = LANG_NAMES[targetLang] || targetLang
-  const systemPrompt = `${SYSTEM_PROMPTS[mode] || SYSTEM_PROMPTS.general} 将以下${srcName}翻译成${tgtName}。`
+  let systemPrompt
+  if (mode === 'technical') {
+    systemPrompt = getTechnicalPrompt(sourceLang, targetLang)
+  } else {
+    systemPrompt = '你是一名专业翻译专家。请将以下内容准确翻译到目标语言，保持原意和语气。只返回翻译结果，不要加任何解释。'
+    const srcName = LANG_NAMES[sourceLang] || sourceLang
+    const tgtName = LANG_NAMES[targetLang] || targetLang
+    systemPrompt += ` 将以下${srcName}翻译成${tgtName}。`
+  }
 
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), 10000)
