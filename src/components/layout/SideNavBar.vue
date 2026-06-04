@@ -28,7 +28,6 @@ function saveApiKey() {
   >
     <div class="px-6 py-6 border-b border-outline-variant mb-4">
       <h2 class="text-2xl font-black text-on-surface">MakeDeal</h2>
-      <p class="text-sm font-semibold text-on-surface-variant opacity-70 tracking-wider uppercase">Technical Trade Tool</p>
     </div>
     <div class="flex-1 overflow-y-auto py-2">
       <router-link
