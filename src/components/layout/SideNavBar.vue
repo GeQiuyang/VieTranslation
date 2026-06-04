@@ -2,9 +2,11 @@
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useTranslationStore } from '@/stores/translation.js'
+import { useThemeStore } from '@/stores/theme.js'
 
 const route = useRoute()
 const store = useTranslationStore()
+const themeStore = useThemeStore()
 const showSettings = ref(false)
 const apiKeyInput = ref(store.getApiKey())
 const saved = ref(false)
@@ -68,6 +70,22 @@ function saveApiKey() {
         >
           {{ saved ? 'Saved' : 'Save Key' }}
         </button>
+        <label class="text-[10px] uppercase font-bold text-outline mt-4 mb-2 block tracking-widest">Theme</label>
+        <div class="grid grid-cols-4 gap-2">
+          <button
+            v-for="t in themeStore.themes"
+            :key="t.key"
+            class="flex flex-col items-center gap-1 p-2 rounded-lg transition-all cursor-pointer text-center"
+            :class="themeStore.current === t.key
+              ? 'bg-secondary text-on-secondary'
+              : 'text-on-surface-variant hover:bg-surface-variant'"
+            :title="t.label"
+            @click="themeStore.setTheme(t.key)"
+          >
+            <span class="material-symbols-outlined text-lg">{{ t.icon }}</span>
+            <span class="text-[9px] font-semibold leading-tight">{{ t.label }}</span>
+          </button>
+        </div>
       </div>
     </div>
     <div class="px-4 py-3 border-t border-outline-variant">
