@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 
 const props = defineProps({
   type: { type: String, required: true }, // 'input' | 'output'
-  language: { type: String, required: true }, // 'zh' | 'vi'
+  language: { type: String, required: true }, // 'zh' | 'vi' | 'en'
   modelValue: { type: String, default: '' },
   isLoading: { type: Boolean, default: false },
   error: { type: String, default: null },
@@ -30,9 +30,9 @@ async function doShare() {
 
 function doSpeak() {
   if (!props.modelValue) return
-  const langCode = props.language === 'zh' ? 'zh-CN' : 'vi-VN'
+  const langCodes = { zh: 'zh-CN', vi: 'vi-VN', en: 'en-US' }
   const utterance = new SpeechSynthesisUtterance(props.modelValue)
-  utterance.lang = langCode
+  utterance.lang = langCodes[props.language] || 'en-US'
   utterance.rate = 0.9
   speaking.value = true
   utterance.onend = () => { speaking.value = false }
@@ -40,26 +40,59 @@ function doSpeak() {
   speechSynthesis.speak(utterance)
 }
 
-const label = computed(() => props.language === 'zh' ? '中文 (Simplified)' : 'Tiếng Việt')
-const badge = computed(() => props.language === 'zh' ? 'CN' : 'VN')
-const placeholder = computed(() =>
-  props.language === 'zh' ? '在此处输入技术规格或贸易条款...' : 'Nhập thông số kỹ thuật hoặc điều khoản thương mại...'
-)
-const emptyText = computed(() =>
-  props.language === 'zh' ? '翻译结果将显示在此处...' : 'Bản dịch sẽ xuất hiện ở đây...'
-)
-const borderColor = computed(() => props.language === 'zh' ? 'border-secondary' : 'border-tertiary-container')
-const badgeBg = computed(() => props.language === 'zh' ? 'bg-primary text-on-primary' : 'bg-tertiary-container text-on-tertiary')
+const labels = { zh: '中文 (Simplified)', vi: 'Tiếng Việt', en: 'English' }
+const badges = { zh: 'CN', vi: 'VN', en: 'EN' }
+const placeholders = {
+  zh: '在此处输入技术规格或贸易条款...',
+  vi: 'Nhập thông số kỹ thuật hoặc điều khoản thương mại...',
+  en: 'Enter technical specs or trade terms...'
+}
+const emptyTexts = {
+  zh: '翻译结果将显示在此处...',
+  vi: 'Bản dịch sẽ xuất hiện ở đây...',
+  en: 'Translation will appear here...'
+}
+const loadingTexts = {
+  zh: '翻译中...',
+  vi: 'Đang dịch...',
+  en: 'Translating...'
+}
+const retryTexts = {
+  zh: '重试 / Thử lại',
+  vi: 'Thử lại / 重试',
+  en: 'Retry'
+}
+const charLabels = {
+  zh: '字数',
+  vi: 'Ký tự',
+  en: 'Chars'
+}
+const clearLabels = {
+  zh: '清空',
+  vi: 'Xóa',
+  en: 'Clear'
+}
+
+const borderColors = {
+  zh: 'border-secondary',
+  vi: 'border-tertiary-container',
+  en: 'border-primary'
+}
+const badgeBgs = {
+  zh: 'bg-primary text-on-primary',
+  vi: 'bg-tertiary-container text-on-tertiary',
+  en: 'bg-secondary text-on-secondary'
+}
 
 const charCount = computed(() => props.modelValue?.length || 0)
 
 const errorMessages = {
-  missing_api_key: '请先在设置中配置 API Key / Vui lòng cấu hình API Key trong cài đặt',
-  empty_input: '请输入翻译内容 / Vui lòng nhập nội dung cần dịch',
-  timeout: '翻译服务响应超时，请重试 / Dịch vụ dịch thuật quá thời gian, vui lòng thử lại',
-  rate_limited: '请求过于频繁，请稍后重试 / Quá nhiều yêu cầu, vui lòng thử lại sau',
-  invalid_api_key: 'API Key 无效，请检查设置 / API Key không hợp lệ, vui lòng kiểm tra cài đặt',
-  too_long: `输入超过${props.maxChars}字限制，已截断 / Vượt quá giới hạn ${props.maxChars} ký tự`
+  missing_api_key: '请先在设置中配置 API Key / Vui lòng cấu hình API Key trong cài đặt / Configure API Key in Settings',
+  empty_input: '请输入翻译内容 / Vui lòng nhập nội dung cần dịch / Please enter text to translate',
+  timeout: '翻译服务响应超时，请重试 / Dịch vụ quá thời gian, thử lại / Translation timed out, please retry',
+  rate_limited: '请求过于频繁，请稍后重试 / Quá nhiều yêu cầu, thử lại sau / Too many requests, try again later',
+  invalid_api_key: 'API Key 无效，请检查设置 / API Key không hợp lệ / Invalid API Key',
+  too_long: `输入超过${props.maxChars}字限制 / Vượt quá ${props.maxChars} ký tự / Exceeds ${props.maxChars} character limit`
 }
 
 const displayError = computed(() => props.error ? (errorMessages[props.error] || props.error) : null)
@@ -70,14 +103,14 @@ function onInput(e) {
 </script>
 
 <template>
-  <div class="flex flex-col bg-surface-container-lowest rounded-lg shadow-sm overflow-hidden translation-glow" :class="`border-t-4 ${borderColor}`">
+  <div class="flex flex-col bg-surface-container-lowest rounded-lg shadow-sm overflow-hidden translation-glow" :class="`border-t-4 ${borderColors[language] || 'border-secondary'}`">
     <!-- Header -->
     <div class="px-6 py-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
       <div class="flex items-center gap-3">
-        <span class="text-[10px] font-bold px-2 py-0.5 rounded tracking-tighter" :class="badgeBg">
-          {{ badge }}
+        <span class="text-[10px] font-bold px-2 py-0.5 rounded tracking-tighter" :class="badgeBgs[language] || badgeBgs.zh">
+          {{ badges[language] || badges.zh }}
         </span>
-        <span class="text-sm font-semibold uppercase">{{ label }}</span>
+        <span class="text-sm font-semibold uppercase">{{ labels[language] || labels.zh }}</span>
       </div>
       <div class="flex gap-2">
         <template v-if="type === 'input'">
@@ -106,14 +139,14 @@ function onInput(e) {
       <textarea
         v-if="type === 'input'"
         class="w-full h-64 md:h-80 p-6 bg-transparent border-none focus:ring-0 text-on-surface text-lg resize-none placeholder:text-outline-variant"
-        :placeholder="placeholder"
+        :placeholder="placeholders[language] || placeholders.zh"
         :value="modelValue"
         @input="onInput"
       />
       <div v-else class="w-full h-64 md:h-80 p-6 text-on-surface text-lg overflow-y-auto leading-relaxed">
         <div v-if="isLoading" class="flex items-center gap-3 text-outline-variant">
           <span class="material-symbols-outlined animate-spin">progress_activity</span>
-          <span class="italic">{{ language === 'zh' ? '翻译中...' : 'Đang dịch...' }}</span>
+          <span class="italic">{{ loadingTexts[language] || loadingTexts.zh }}</span>
         </div>
         <div v-else-if="displayError" class="text-error text-sm flex flex-col gap-2">
           <span>{{ displayError }}</span>
@@ -122,10 +155,10 @@ function onInput(e) {
             class="text-tertiary font-bold text-xs hover:underline self-start cursor-pointer"
             @click="$emit('translate')"
           >
-            {{ language === 'zh' ? '重试 / Thử lại' : 'Thử lại / 重试' }}
+            {{ retryTexts[language] || retryTexts.zh }}
           </button>
         </div>
-        <span v-else-if="!modelValue" class="text-outline-variant italic">{{ emptyText }}</span>
+        <span v-else-if="!modelValue" class="text-outline-variant italic">{{ emptyTexts[language] || emptyTexts.zh }}</span>
         <span v-else class="whitespace-pre-wrap">{{ modelValue }}</span>
       </div>
 
@@ -139,9 +172,9 @@ function onInput(e) {
     <!-- Footer -->
     <div class="px-6 py-3 border-t border-outline-variant flex justify-between items-center text-on-surface-variant" :class="{ 'bg-tertiary-container/5': type === 'output' }">
       <template v-if="type === 'input'">
-        <span class="text-xs">{{ language === 'zh' ? `字数: ${charCount} / ${maxChars}` : `Ký tự: ${charCount} / ${maxChars}` }}</span>
+        <span class="text-xs">{{ charLabels[language] || charLabels.zh }}: {{ charCount }} / {{ maxChars }}</span>
         <button class="text-xs flex items-center gap-1 hover:text-primary transition-colors cursor-pointer" @click="$emit('clear')">
-          <span class="material-symbols-outlined text-sm">delete</span> {{ language === 'zh' ? '清空' : 'Xóa' }}
+          <span class="material-symbols-outlined text-sm">delete</span> {{ clearLabels[language] || clearLabels.zh }}
         </button>
       </template>
       <template v-else>

@@ -5,15 +5,18 @@ import { translateText } from '@/api/deepseek.js'
 const COMMON_PHRASES = {
   'price': {
     zh: '请提供该产品的报价，包括FOB价格和最小起订量。',
-    vi: 'Vui lòng cung cấp báo giá cho sản phẩm này, bao gồm giá FOB và số lượng đặt hàng tối thiểu.'
+    vi: 'Vui lòng cung cấp báo giá cho sản phẩm này, bao gồm giá FOB và số lượng đặt hàng tối thiểu.',
+    en: 'Please provide a quotation for this product, including FOB price and minimum order quantity.'
   },
   'shipping': {
     zh: '请说明运输条款和预计交货时间。',
-    vi: 'Vui lòng cho biết điều khoản vận chuyển và thời gian giao hàng dự kiến.'
+    vi: 'Vui lòng cho biết điều khoản vận chuyển và thời gian giao hàng dự kiến.',
+    en: 'Please specify the shipping terms and estimated delivery time.'
   },
   'technical': {
     zh: '请提供该设备的技术参数和规格说明。',
-    vi: 'Vui lòng cung cấp thông số kỹ thuật và mô tả thông số của thiết bị này.'
+    vi: 'Vui lòng cung cấp thông số kỹ thuật và mô tả thông số của thiết bị này.',
+    en: 'Please provide the technical parameters and specifications for this equipment.'
   }
 }
 

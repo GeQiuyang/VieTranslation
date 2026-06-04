@@ -1,13 +1,14 @@
 const API_BASE = 'https://api.deepseek.com/v1/chat/completions'
 
 const SYSTEM_PROMPTS = {
-  general: '你是一名专业的中文-越南语翻译专家。请将以下内容准确翻译到目标语言，保持原意和语气。只返回翻译结果，不要加任何解释。',
-  technical: '你是旋挖钻机行业的中越翻译专家。精通钻杆（Kelly Bar）、钻头（Drill Bit）、动力头（Rotary Head）、液压系统（Hydraulic System）、底盘（Undercarriage）、变幅机构（Luffing Mechanism）等术语。请使用行业标准译法翻译以下内容，保留技术规格的数值精度。只返回翻译结果，不要加任何解释。'
+  general: '你是一名专业的中文-越南语-英语翻译专家。请将以下内容准确翻译到目标语言，保持原意和语气。只返回翻译结果，不要加任何解释。',
+  technical: '你是旋挖钻机行业的中越英翻译专家。精通钻杆（Kelly Bar）、钻头（Drill Bit）、动力头（Rotary Head）、液压系统（Hydraulic System）、底盘（Undercarriage）、变幅机构（Luffing Mechanism）等术语。请使用行业标准译法翻译以下内容，保留技术规格的数值精度。只返回翻译结果，不要加任何解释。'
 }
 
 const LANG_NAMES = {
-  zh: 'Vietnamese',
-  vi: 'Chinese'
+  zh: 'Chinese',
+  vi: 'Vietnamese',
+  en: 'English'
 }
 
 export async function translateText({ text, sourceLang, targetLang, mode = 'general', apiKey }) {
@@ -18,7 +19,9 @@ export async function translateText({ text, sourceLang, targetLang, mode = 'gene
     throw new Error('empty_input')
   }
 
-  const systemPrompt = `${SYSTEM_PROMPTS[mode] || SYSTEM_PROMPTS.general} 将以下${sourceLang === 'zh' ? '中文' : '越南语'}翻译成${targetLang === 'zh' ? '中文' : '越南语'}。`
+  const srcName = LANG_NAMES[sourceLang] || sourceLang
+  const tgtName = LANG_NAMES[targetLang] || targetLang
+  const systemPrompt = `${SYSTEM_PROMPTS[mode] || SYSTEM_PROMPTS.general} 将以下${srcName}翻译成${tgtName}。`
 
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), 10000)
