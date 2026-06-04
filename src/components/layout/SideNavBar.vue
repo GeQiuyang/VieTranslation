@@ -11,7 +11,7 @@ const saved = ref(false)
 
 const navItems = [
   { path: '/', icon: 'translate', label: 'Translation' },
-  { path: '/glossary', icon: 'settings_input_component', label: 'Parts Glossary' },
+  { path: '/glossary', icon: 'settings_input_component', label: 'Parts Inventory' },
   { path: '/inquiry', icon: 'description', label: 'Inquiry Management' },
 ]
 
