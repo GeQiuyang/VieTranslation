@@ -2,7 +2,7 @@
   <footer class="w-full py-12 px-6 bg-surface-container-lowest border-t border-outline-variant">
     <div class="max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-start gap-8">
       <div class="flex flex-col gap-4 max-w-sm">
-        <span class="text-2xl font-bold text-primary">RIG-EXPERT</span>
+        <span class="text-2xl font-bold text-primary">中越翻译工具</span>
         <p class="text-on-surface-variant text-sm">The definitive technical trade tool for the Sino-Vietnamese drilling industry. Engineered for precision, built for reliability.</p>
         <div class="flex gap-4 mt-2">
           <span class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer">public</span>
@@ -38,10 +38,10 @@
       </div>
     </div>
     <div class="max-w-[1440px] mx-auto mt-12 pt-8 border-t border-outline-variant flex flex-col md:flex-row justify-between items-center gap-4">
-      <p class="text-sm font-semibold text-on-surface-variant">© 2024 RigExpert Technical Trade. All rights reserved.</p>
+      <p class="text-sm font-semibold text-on-surface-variant">© 2024 中越翻译工具. All rights reserved.</p>
       <div class="flex items-center gap-2">
         <span class="text-xs text-on-surface-variant">Powered by</span>
-        <span class="font-bold text-sm tracking-widest">NEURAL-RIG AI</span>
+        <span class="font-bold text-sm tracking-widest">DeepSeek</span>
       </div>
     </div>
   </footer>
