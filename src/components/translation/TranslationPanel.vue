@@ -30,6 +30,7 @@ async function doShare() {
 
 function doSpeak() {
   if (!props.modelValue) return
+  speechSynthesis.cancel()
   const langCodes = { zh: 'zh-CN', vi: 'vi-VN', en: 'en-US' }
   const utterance = new SpeechSynthesisUtterance(props.modelValue)
   utterance.lang = langCodes[props.language] || 'en-US'
