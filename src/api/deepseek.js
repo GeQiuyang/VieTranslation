@@ -12,12 +12,8 @@ const LANG_NAMES = {
 }
 
 export async function translateText({ text, sourceLang, targetLang, mode = 'general', apiKey }) {
-  if (!apiKey) {
-    throw new Error('missing_api_key')
-  }
-  if (!text?.trim()) {
-    throw new Error('empty_input')
-  }
+  if (!apiKey) throw new Error('missing_api_key')
+  if (!text?.trim()) throw new Error('empty_input')
 
   const srcName = LANG_NAMES[sourceLang] || sourceLang
   const tgtName = LANG_NAMES[targetLang] || targetLang
@@ -40,6 +36,51 @@ export async function translateText({ text, sourceLang, targetLang, mode = 'gene
           { role: 'user', content: text }
         ],
         temperature: 0.3,
+        max_tokens: 4096
+      }),
+      signal: controller.signal
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
+      if (response.status === 429) throw new Error('rate_limited')
+      if (response.status === 401) throw new Error('invalid_api_key')
+      throw new Error(errorData.error?.message || `API error: ${response.status}`)
+    }
+
+    const data = await response.json()
+    return data.choices[0].message.content.trim()
+  } catch (err) {
+    if (err.name === 'AbortError') throw new Error('timeout')
+    throw err
+  } finally {
+    clearTimeout(timeoutId)
+  }
+}
+
+export async function generateMarketingCopy({ productName, wordCount, apiKey }) {
+  if (!apiKey) throw new Error('missing_api_key')
+  if (!productName?.trim()) throw new Error('empty_product')
+
+  const systemPrompt = `你是一名专业的中文营销文案撰写专家，专注于中越贸易产品推广。请根据用户提供的产品名称，撰写一篇约${wordCount}字的中文营销文案。文案应包含：产品亮点、竞争优势、适用场景、以及号召购买的内容。语言应专业、有感染力，适合B2B贸易场景。只返回文案内容，不要加任何解释和标题。`
+
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), 15000)
+
+  try {
+    const response = await fetch(API_BASE, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'deepseek-chat',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: productName }
+        ],
+        temperature: 0.7,
         max_tokens: 4096
       }),
       signal: controller.signal

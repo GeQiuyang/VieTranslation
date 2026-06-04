@@ -16,6 +16,11 @@ const routes = [
     name: 'inquiry',
     component: () => import('@/views/InquiryView.vue')
   },
+  {
+    path: '/marketing',
+    name: 'marketing',
+    component: () => import('@/views/MarketingView.vue')
+  },
 ]
 
 const router = createRouter({
