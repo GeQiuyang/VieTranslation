@@ -16,7 +16,7 @@ function closeSidebar() {
 </script>
 
 <template>
-  <div class="min-h-screen bg-background text-on-background font-sans">
+  <div class="min-h-screen bg-background text-on-background font-sans overflow-x-hidden">
     <TopNavBar @toggle-sidebar="toggleSidebar" />
     <SideNavBar :visible="sidebarVisible" @close="closeSidebar" />
     <main class="md:ml-64 pt-20 pb-16 px-6 max-w-[1440px] mx-auto min-h-screen">

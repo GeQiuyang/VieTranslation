@@ -23,10 +23,9 @@ const commonPhrases = [
 </script>
 
 <template>
-  <!-- Desktop sidebar -->
+  <!-- Desktop sidebar (always fixed visible) -->
   <aside
-    class="fixed left-0 top-0 h-full flex flex-col pt-16 z-40 bg-surface-container-low border-r border-outline-variant w-64"
-    :class="{ 'translate-x-0': visible, '-translate-x-full': !visible, 'hidden md:flex': true }"
+    class="fixed left-0 top-0 h-full flex-col pt-16 z-40 bg-surface-container-low border-r border-outline-variant w-64 hidden md:flex"
   >
     <div class="px-6 py-6 border-b border-outline-variant mb-4">
       <h2 class="text-2xl font-black text-on-surface">RigExpert Pro</h2>

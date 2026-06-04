@@ -3,9 +3,6 @@ import { watch } from 'vue'
 import { useTranslationStore } from '@/stores/translation.js'
 import LanguageToggle from '@/components/translation/LanguageToggle.vue'
 import TranslationPanel from '@/components/translation/TranslationPanel.vue'
-import GlossaryCard from '@/components/features/GlossaryCard.vue'
-import ExchangeRateCard from '@/components/features/ExchangeRateCard.vue'
-import TradeEcosystem from '@/components/features/TradeEcosystem.vue'
 
 const store = useTranslationStore()
 
@@ -75,13 +72,5 @@ function handleTranslate() {
       />
     </div>
 
-    <!-- Bento Grid -->
-    <section class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-      <GlossaryCard />
-      <ExchangeRateCard />
-    </section>
-
-    <!-- Trade Ecosystem -->
-    <TradeEcosystem />
   </div>
 </template>
