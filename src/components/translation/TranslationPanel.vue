@@ -32,13 +32,22 @@ function doSpeak() {
   if (!props.modelValue) return
   speechSynthesis.cancel()
   const langCodes = { zh: 'zh-CN', vi: 'vi-VN', en: 'en-US' }
-  const utterance = new SpeechSynthesisUtterance(props.modelValue)
-  utterance.lang = langCodes[props.language] || 'en-US'
-  utterance.rate = 0.9
-  speaking.value = true
-  utterance.onend = () => { speaking.value = false }
-  utterance.onerror = () => { speaking.value = false }
-  speechSynthesis.speak(utterance)
+  const langCode = langCodes[props.language] || 'en-US'
+
+  setTimeout(() => {
+    const utterance = new SpeechSynthesisUtterance(props.modelValue)
+    utterance.lang = langCode
+    utterance.rate = 0.9
+
+    const voices = speechSynthesis.getVoices()
+    const voice = voices.find(v => v.lang.startsWith(langCode.split('-')[0]))
+    if (voice) utterance.voice = voice
+
+    speaking.value = true
+    utterance.onend = () => { speaking.value = false }
+    utterance.onerror = () => { speaking.value = false }
+    speechSynthesis.speak(utterance)
+  }, 50)
 }
 
 watch(() => props.language, () => {
