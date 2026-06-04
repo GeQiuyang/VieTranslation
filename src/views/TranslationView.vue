@@ -43,23 +43,6 @@ function clearAllHistory() {
 
 <template>
   <div>
-    <!-- Hero / Controls Row -->
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-      <!-- Technical Mode Toggle -->
-      <div class="flex items-center gap-4 bg-surface-container p-2 rounded-xl border border-outline-variant">
-        <span class="text-sm font-semibold text-on-surface-variant ml-2">Rotary Drilling Rig Mode</span>
-        <button
-          class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none cursor-pointer"
-          :class="store.mode === 'technical' ? 'bg-tertiary' : 'bg-outline'"
-          @click="store.mode = store.mode === 'technical' ? 'general' : 'technical'"
-        >
-          <span
-            class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"
-            :class="store.mode === 'technical' ? 'translate-x-6' : 'translate-x-1'"
-          />
-        </button>
-      </div>
-    </div>
 
     <!-- Language Toggle -->
     <LanguageToggle />
