@@ -1,9 +1,11 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { useMarketingStore } from '@/stores/marketing.js'
 
 const store = useMarketingStore()
 const copied = ref({ main: false, en: false, vi: false })
+const editing = reactive({ main: false, en: false, vi: false })
+const editedText = reactive({ main: '', en: '', vi: '' })
 
 async function handleGenerate() {
   await store.generate()
@@ -13,6 +15,22 @@ async function copyText(text, key) {
   await navigator.clipboard.writeText(text)
   copied.value[key] = true
   setTimeout(() => copied.value[key] = false, 1500)
+}
+
+function startEdit(key, text) {
+  editedText[key] = text
+  editing[key] = true
+}
+
+function saveEdit(key) {
+  if (key === 'main') store.generatedCopy = editedText[key]
+  else if (key === 'en') store.enTranslation = editedText[key]
+  else store.viTranslation = editedText[key]
+  editing[key] = false
+}
+
+function cancelEdit(key) {
+  editing[key] = false
 }
 
 const errorLabels = {
@@ -75,17 +93,35 @@ const errorLabels = {
             <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-primary text-on-primary">CN</span>
             <span class="text-sm font-semibold">营销文案 / Marketing Copy</span>
           </div>
-          <button
-            v-if="store.generatedCopy"
-            class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors p-1 cursor-pointer"
-            @click="copyText(store.generatedCopy, 'main')"
-          >{{ copied.main ? 'check' : 'content_copy' }}</button>
+          <div class="flex gap-1" v-if="store.generatedCopy">
+            <button
+              class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors p-1 cursor-pointer"
+              :title="editing.main ? 'Save' : 'Edit'"
+              @click="editing.main ? saveEdit('main') : startEdit('main', store.generatedCopy)"
+            >{{ editing.main ? 'check' : 'edit' }}</button>
+            <button
+              v-if="editing.main"
+              class="material-symbols-outlined text-on-surface-variant hover:text-error transition-colors p-1 cursor-pointer"
+              title="Cancel"
+              @click="cancelEdit('main')"
+            >close</button>
+            <button
+              v-if="!editing.main"
+              class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors p-1 cursor-pointer"
+              @click="copyText(store.generatedCopy, 'main')"
+            >{{ copied.main ? 'check' : 'content_copy' }}</button>
+          </div>
         </div>
         <div class="p-6">
           <div v-if="store.isLoading" class="flex items-center gap-3 text-outline-variant py-8">
             <span class="material-symbols-outlined animate-spin">progress_activity</span>
             <span class="italic">正在生成营销文案...</span>
           </div>
+          <textarea
+            v-else-if="editing.main"
+            v-model="editedText.main"
+            class="w-full h-64 p-3 bg-surface-container-low border border-outline-variant rounded text-on-surface text-base leading-relaxed resize-none focus:ring-2 focus:ring-tertiary-container outline-none"
+          ></textarea>
           <p v-else class="text-on-surface text-base leading-relaxed whitespace-pre-wrap">{{ store.generatedCopy }}</p>
         </div>
       </div>
@@ -102,6 +138,18 @@ const errorLabels = {
             <div class="flex gap-1">
               <button
                 v-if="store.enTranslation"
+                class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors p-1 cursor-pointer text-sm"
+                :title="editing.en ? 'Save' : 'Edit'"
+                @click="editing.en ? saveEdit('en') : startEdit('en', store.enTranslation)"
+              >{{ editing.en ? 'check' : 'edit' }}</button>
+              <button
+                v-if="editing.en"
+                class="material-symbols-outlined text-on-surface-variant hover:text-error transition-colors p-1 cursor-pointer text-sm"
+                title="Cancel"
+                @click="cancelEdit('en')"
+              >close</button>
+              <button
+                v-if="!editing.en && store.enTranslation"
                 class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors p-1 cursor-pointer text-sm"
                 @click="copyText(store.enTranslation, 'en')"
               >{{ copied.en ? 'check' : 'content_copy' }}</button>
@@ -121,6 +169,11 @@ const errorLabels = {
               <span class="material-symbols-outlined animate-spin text-sm">progress_activity</span>
               Translating...
             </div>
+            <textarea
+              v-else-if="editing.en"
+              v-model="editedText.en"
+              class="w-full h-40 p-3 bg-surface-container-low border border-outline-variant rounded text-on-surface text-base leading-relaxed resize-none focus:ring-2 focus:ring-tertiary-container outline-none"
+            ></textarea>
             <p v-else-if="store.enTranslation" class="text-on-surface text-base leading-relaxed whitespace-pre-wrap">{{ store.enTranslation }}</p>
             <p v-else class="text-outline-variant italic text-sm">Click "Translate" to generate English version</p>
           </div>
@@ -136,6 +189,18 @@ const errorLabels = {
             <div class="flex gap-1">
               <button
                 v-if="store.viTranslation"
+                class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors p-1 cursor-pointer text-sm"
+                :title="editing.vi ? 'Save' : 'Edit'"
+                @click="editing.vi ? saveEdit('vi') : startEdit('vi', store.viTranslation)"
+              >{{ editing.vi ? 'check' : 'edit' }}</button>
+              <button
+                v-if="editing.vi"
+                class="material-symbols-outlined text-on-surface-variant hover:text-error transition-colors p-1 cursor-pointer text-sm"
+                title="Cancel"
+                @click="cancelEdit('vi')"
+              >close</button>
+              <button
+                v-if="!editing.vi && store.viTranslation"
                 class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors p-1 cursor-pointer text-sm"
                 @click="copyText(store.viTranslation, 'vi')"
               >{{ copied.vi ? 'check' : 'content_copy' }}</button>
@@ -155,6 +220,11 @@ const errorLabels = {
               <span class="material-symbols-outlined animate-spin text-sm">progress_activity</span>
               Đang dịch...
             </div>
+            <textarea
+              v-else-if="editing.vi"
+              v-model="editedText.vi"
+              class="w-full h-40 p-3 bg-surface-container-low border border-outline-variant rounded text-on-surface text-base leading-relaxed resize-none focus:ring-2 focus:ring-tertiary-container outline-none"
+            ></textarea>
             <p v-else-if="store.viTranslation" class="text-on-surface text-base leading-relaxed whitespace-pre-wrap">{{ store.viTranslation }}</p>
             <p v-else class="text-outline-variant italic text-sm">Nhấn "Dịch" để tạo bản tiếng Việt</p>
           </div>
