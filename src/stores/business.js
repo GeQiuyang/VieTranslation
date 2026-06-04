@@ -5,6 +5,8 @@ import { useTranslationStore } from '@/stores/translation.js'
 
 export const useBusinessStore = defineStore('business', () => {
   const keyword = ref('')
+  const customerCount = ref(10)
+  const country = ref('Vietnam')
   const results = ref([])
   const isLoading = ref(false)
   const error = ref(null)
@@ -28,6 +30,8 @@ export const useBusinessStore = defineStore('business', () => {
     try {
       const raw = await searchCustomers({
         keyword: keyword.value,
+        customerCount: customerCount.value,
+        country: country.value,
         apiKey
       })
       results.value = raw
@@ -48,5 +52,5 @@ export const useBusinessStore = defineStore('business', () => {
     results.value.splice(index, 1)
   }
 
-  return { keyword, results, isLoading, error, search, clear, removeRow }
+  return { keyword, customerCount, country, results, isLoading, error, search, clear, removeRow }
 })

@@ -58,11 +58,11 @@ export async function translateText({ text, sourceLang, targetLang, mode = 'gene
   }
 }
 
-export async function searchCustomers({ keyword, apiKey }) {
+export async function searchCustomers({ keyword, customerCount = 10, country = 'Vietnam', apiKey }) {
   if (!apiKey) throw new Error('missing_api_key')
   if (!keyword?.trim()) throw new Error('empty_keyword')
 
-  const systemPrompt = `你是一名中越贸易客户开发专家。请根据产品关键词，生成10个潜在客户信息。客户应该是越南相关的贸易公司、进口商或经销商。以严格的JSON数组格式返回，每个对象包含以下字段：company（公司名称）、contact（联系人）、email（邮箱）、address（公司地址）、social（社交媒体，如LinkedIn/Facebook链接）、legalRep（公司法人）。只返回JSON数组，不要加任何解释或markdown格式。`
+  const systemPrompt = `你是一名国际贸易客户开发专家。请根据产品关键词，生成${customerCount}个潜在客户信息。客户应该是在${country}的相关贸易公司、进口商或经销商。以严格的JSON数组格式返回，每个对象包含以下字段：company（公司名称）、contact（联系人）、email（邮箱）、address（公司地址）、social（社交媒体，如LinkedIn/Facebook链接）、legalRep（公司法人）。只返回JSON数组，不要加任何解释或markdown格式。`
 
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), 20000)

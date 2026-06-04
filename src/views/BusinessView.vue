@@ -46,15 +46,34 @@ const errorLabels = {
   <div>
     <!-- Search Section -->
     <div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-6 mb-6">
-      <div class="flex flex-col sm:flex-row gap-4 items-end">
-        <div class="flex-1">
+      <div class="flex flex-col sm:flex-row gap-4 items-end flex-wrap">
+        <div class="flex-1 min-w-[200px]">
           <label class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider block mb-1">Product Keywords</label>
           <input
             v-model="keywordInput"
             type="text"
-            placeholder="输入产品关键词搜索越南客户 / Enter product keywords..."
+            placeholder="输入产品关键词 / Enter product keywords..."
             class="w-full px-3 py-2.5 bg-surface-container-low border border-outline-variant rounded-lg text-on-surface text-sm focus:ring-2 focus:ring-tertiary-container outline-none"
             @keyup.enter="handleSearch"
+          />
+        </div>
+        <div class="w-[140px]">
+          <label class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider block mb-1">Customers</label>
+          <input
+            v-model.number="store.customerCount"
+            type="number"
+            min="1"
+            max="100"
+            class="w-full px-3 py-2.5 bg-surface-container-low border border-outline-variant rounded-lg text-on-surface text-sm focus:ring-2 focus:ring-tertiary-container outline-none"
+          />
+        </div>
+        <div class="w-[180px]">
+          <label class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider block mb-1">Country</label>
+          <input
+            v-model="store.country"
+            type="text"
+            placeholder="Vietnam"
+            class="w-full px-3 py-2.5 bg-surface-container-low border border-outline-variant rounded-lg text-on-surface text-sm focus:ring-2 focus:ring-tertiary-container outline-none"
           />
         </div>
         <div class="flex gap-2">
@@ -125,7 +144,7 @@ const errorLabels = {
         </table>
       </div>
       <div class="px-4 py-3 border-t border-outline-variant flex justify-between items-center text-xs text-on-surface-variant">
-        <span>{{ store.results.length }} customers found for "{{ store.keyword }}"</span>
+        <span>{{ store.results.length }} customers found in {{ store.country }} for "{{ store.keyword }}"</span>
         <button class="flex items-center gap-1 hover:text-primary transition-colors cursor-pointer" @click="store.clear()">
           <span class="material-symbols-outlined text-sm">delete</span> Clear All
         </button>
@@ -135,14 +154,14 @@ const errorLabels = {
     <!-- Loading -->
     <div v-if="store.isLoading" class="bg-surface-container-lowest border border-outline-variant rounded-lg p-12 text-center">
       <span class="material-symbols-outlined animate-spin text-4xl text-outline-variant mb-4">progress_activity</span>
-      <p class="text-on-surface-variant text-sm">正在搜索越南潜在客户...</p>
+      <p class="text-on-surface-variant text-sm">搜索 {{ store.country || '...' }} 潜在客户中...</p>
     </div>
 
     <!-- Empty State -->
     <div v-if="!store.results.length && !store.isLoading" class="flex flex-col items-center justify-center py-24 text-center">
       <span class="material-symbols-outlined text-[80px] text-outline-variant/40 mb-6">person_search</span>
       <p class="text-on-surface-variant text-base max-w-md">
-        输入产品关键词，AI 将为您搜索越南潜在客户信息。
+        输入产品关键词，设置客户数和目标国家，AI 将为您搜索潜在客户信息。
       </p>
     </div>
   </div>
