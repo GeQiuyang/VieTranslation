@@ -1,6 +1,5 @@
 <script setup>
-import { useRoute, useRouter } from 'vue-router'
-import { useTranslationStore } from '@/stores/translation.js'
+import { useRoute } from 'vue-router'
 
 defineProps({
   visible: { type: Boolean, default: true }
@@ -8,8 +7,6 @@ defineProps({
 defineEmits(['close'])
 
 const route = useRoute()
-const router = useRouter()
-const store = useTranslationStore()
 
 const navItems = [
   { path: '/', icon: 'translate', label: 'Translation' },
@@ -18,16 +15,6 @@ const navItems = [
   { path: '/profile', icon: 'person', label: 'User Profile' }
 ]
 
-const commonPhrases = [
-  { key: 'price', icon: 'payments', label: 'Price quotation' },
-  { key: 'shipping', icon: 'local_shipping', label: 'Shipping terms' },
-  { key: 'technical', icon: 'engineering', label: 'Technical specs' }
-]
-
-function usePhrase(key) {
-  store.useCommonPhrase(key)
-  if (route.path !== '/') router.push('/')
-}
 </script>
 
 <template>
@@ -58,20 +45,6 @@ function usePhrase(key) {
         <router-link to="/inquiry" class="block w-full py-3 bg-primary text-on-primary rounded text-sm font-bold uppercase tracking-wider hover:opacity-90 transition-opacity text-center">
           New Inquiry
         </router-link>
-      </div>
-      <div class="mt-8 px-4">
-        <p class="text-[10px] uppercase font-bold text-outline mb-2 tracking-widest px-2">Common Phrases</p>
-        <div class="space-y-1">
-          <button
-            v-for="phrase in commonPhrases"
-            :key="phrase.key"
-            class="w-full text-left px-3 py-2 text-on-surface-variant hover:bg-surface-variant rounded text-sm transition-colors flex items-center gap-2 cursor-pointer"
-            @click="usePhrase(phrase.key)"
-          >
-            <span class="material-symbols-outlined text-lg">{{ phrase.icon }}</span>
-            {{ phrase.label }}
-          </button>
-        </div>
       </div>
     </div>
     <div class="mt-auto border-t border-outline-variant p-2">
@@ -120,20 +93,6 @@ function usePhrase(key) {
         <router-link to="/inquiry" class="block w-full py-3 bg-primary text-on-primary rounded text-sm font-bold uppercase tracking-wider hover:opacity-90 transition-opacity text-center">
           New Inquiry
         </router-link>
-      </div>
-      <div class="mt-8 px-4">
-        <p class="text-[10px] uppercase font-bold text-outline mb-2 tracking-widest px-2">Common Phrases</p>
-        <div class="space-y-1">
-          <button
-            v-for="phrase in commonPhrases"
-            :key="phrase.key"
-            class="w-full text-left px-3 py-2 text-on-surface-variant hover:bg-surface-variant rounded text-sm transition-colors flex items-center gap-2 cursor-pointer"
-            @click="usePhrase(phrase.key)"
-          >
-            <span class="material-symbols-outlined text-lg">{{ phrase.icon }}</span>
-            {{ phrase.label }}
-          </button>
-        </div>
       </div>
     </div>
     <div class="mt-auto border-t border-outline-variant p-2">

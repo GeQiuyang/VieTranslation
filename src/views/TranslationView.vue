@@ -16,7 +16,7 @@ watch(() => store.inputText, () => {
     store.outputText = ''
     store.error = null
   }
-})
+}, { immediate: true })
 
 function handleClear() {
   store.clearInput()
