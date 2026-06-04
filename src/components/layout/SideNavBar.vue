@@ -39,12 +39,11 @@ const navItems = [
         <span class="material-symbols-outlined">{{ item.icon }}</span>
         <span class="text-sm font-semibold">{{ item.label }}</span>
       </router-link>
-
-      <div class="mt-8 px-4">
-        <router-link to="/inquiry" class="block w-full py-3 bg-primary text-on-primary rounded text-sm font-bold uppercase tracking-wider hover:opacity-90 transition-opacity text-center">
-          New Inquiry
-        </router-link>
-      </div>
+    </div>
+    <div class="px-4 py-3 border-t border-outline-variant">
+      <router-link to="/inquiry" class="block w-full py-3 bg-primary text-on-primary rounded text-sm font-bold uppercase tracking-wider hover:opacity-90 transition-opacity text-center">
+        New Inquiry
+      </router-link>
     </div>
   </aside>
 
@@ -77,12 +76,11 @@ const navItems = [
         <span class="material-symbols-outlined">{{ item.icon }}</span>
         <span class="text-sm font-semibold">{{ item.label }}</span>
       </router-link>
-
-      <div class="mt-8 px-4">
-        <router-link to="/inquiry" class="block w-full py-3 bg-primary text-on-primary rounded text-sm font-bold uppercase tracking-wider hover:opacity-90 transition-opacity text-center">
-          New Inquiry
-        </router-link>
-      </div>
+    </div>
+    <div class="px-4 py-3 border-t border-outline-variant">
+      <router-link to="/inquiry" class="block w-full py-3 bg-primary text-on-primary rounded text-sm font-bold uppercase tracking-wider hover:opacity-90 transition-opacity text-center">
+        New Inquiry
+      </router-link>
     </div>
   </aside>
 </template>
