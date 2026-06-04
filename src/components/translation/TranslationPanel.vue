@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 const props = defineProps({
   type: { type: String, required: true }, // 'input' | 'output'
@@ -40,6 +40,11 @@ function doSpeak() {
   utterance.onerror = () => { speaking.value = false }
   speechSynthesis.speak(utterance)
 }
+
+watch(() => props.language, () => {
+  speechSynthesis.cancel()
+  speaking.value = false
+})
 
 const labels = { zh: '中文 (Simplified)', vi: 'Tiếng Việt', en: 'English' }
 const badges = { zh: 'CN', vi: 'VN', en: 'EN' }
