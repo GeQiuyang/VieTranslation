@@ -12,7 +12,6 @@ const navItems = [
   { path: '/', icon: 'translate', label: 'Translation' },
   { path: '/glossary', icon: 'settings_input_component', label: 'Parts Glossary' },
   { path: '/inquiry', icon: 'description', label: 'Inquiry Management' },
-  { path: '/profile', icon: 'person', label: 'User Profile' }
 ]
 
 </script>
@@ -46,12 +45,6 @@ const navItems = [
           New Inquiry
         </router-link>
       </div>
-    </div>
-    <div class="mt-auto border-t border-outline-variant p-2">
-      <router-link to="/profile" class="flex items-center gap-3 px-4 py-3 mb-1 mx-2 rounded-lg text-on-surface-variant hover:bg-surface-variant cursor-pointer transition-all">
-        <span class="material-symbols-outlined">settings</span>
-        <span class="text-sm font-semibold">Settings</span>
-      </router-link>
     </div>
   </aside>
 
@@ -90,12 +83,6 @@ const navItems = [
           New Inquiry
         </router-link>
       </div>
-    </div>
-    <div class="mt-auto border-t border-outline-variant p-2">
-      <router-link to="/profile" class="flex items-center gap-3 px-4 py-3 mb-1 mx-2 rounded-lg text-on-surface-variant hover:bg-surface-variant cursor-pointer transition-all">
-        <span class="material-symbols-outlined">settings</span>
-        <span class="text-sm font-semibold">Settings</span>
-      </router-link>
     </div>
   </aside>
 </template>

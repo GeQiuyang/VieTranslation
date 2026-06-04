@@ -118,14 +118,7 @@ function onInput(e) {
         <div v-else-if="displayError" class="text-error text-sm flex flex-col gap-2">
           <span>{{ displayError }}</span>
           <button
-            v-if="error === 'missing_api_key'"
-            class="text-tertiary font-bold text-xs hover:underline self-start cursor-pointer"
-            @click="$router.push('/profile')"
-          >
-            {{ language === 'zh' ? '前往设置 →' : 'Đi tới cài đặt →' }}
-          </button>
-          <button
-            v-else
+            v-if="error !== 'missing_api_key'"
             class="text-tertiary font-bold text-xs hover:underline self-start cursor-pointer"
             @click="$emit('translate')"
           >
